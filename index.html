@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enablement Radar — GTM Operations Console</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --border: #dadce0;
+    --text: #202124;
+    --text-secondary: #5f6368;
+    --blue: #1a73e8;
+    --green-bg: #e6f4ea; --green-fg: #137333;
+    --amber-bg: #fef7e0; --amber-fg: #b06000;
+    --red-bg: #fce8e6;   --red-fg: #c5221f;
+    --gray-bg: #f1f3f4;  --gray-fg: #5f6368;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 24px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  header { margin-bottom: 20px; }
+  h1 { font-size: 22px; font-weight: 600; }
+  .subtitle { color: var(--text-secondary); margin-top: 4px; font-size: 13px; max-width: 860px; }
+  .asof { color: var(--text-secondary); font-size: 12px; margin-top: 8px; }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    appearance: none;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .panel-header h2 { font-size: 16px; font-weight: 600; }
+  .panel-header .panel-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #fafafa;
+  }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbfc; }
+
+  .asset-name { font-weight: 600; font-size: 13.5px; }
+  .asset-publisher { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge.fresh   { background: var(--green-bg); color: var(--green-fg); }
+  .badge.aging   { background: var(--amber-bg); color: var(--amber-fg); }
+  .badge.stale   { background: var(--red-bg);   color: var(--red-fg); }
+  .badge.unknown { background: var(--gray-bg);  color: var(--gray-fg); }
+
+  .date-cell { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .date-unknown { color: var(--gray-fg); font-style: italic; }
+
+  .note { font-size: 13px; color: var(--text); }
+
+  .cite {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--blue);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    background: #f8f9fa;
+  }
+  .cite:hover { background: #e8f0fe; border-color: var(--blue); }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    font-size: 12px;
+    color: var(--text-secondary);
+    align-items: center;
+  }
+  .legend .badge { font-weight: 500; }
+
+  .footnote {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .footnote strong { color: var(--text); }
+
+  /* Change-detected row + diff view */
+  tr.change-detected td {
+    background: #fffaf9;
+    border-left: 4px solid var(--red-fg);
+  }
+  tr.change-detected td:not(:first-child) { border-left: none; }
+  tr.change-detected:hover td { background: #fff5f3; }
+  .change-flag {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--red-fg);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  tr.diff-row td {
+    background: #fffaf9;
+    border-left: 4px solid var(--red-fg);
+    padding: 0 16px 18px 20px;
+  }
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 760px) { .diff-grid { grid-template-columns: 1fr; } }
+  .diff-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .diff-card-header {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .diff-card.before .diff-card-header { background: var(--gray-bg); color: var(--gray-fg); }
+  .diff-card.after  .diff-card-header { background: var(--red-bg);  color: var(--red-fg); }
+  .diff-card-body { padding: 12px 14px; font-size: 13px; }
+  .diff-card-body ul { margin: 8px 0 0 18px; }
+  .diff-card-body li { margin-bottom: 4px; }
+  .diff-removed { color: var(--red-fg); }
+  .diff-note {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 4px;
+    background: #f8fbff;
+    font-size: 12.5px;
+    color: var(--text);
+  }
+  .diff-note strong { color: var(--blue); }
+
+  tr.vendor-row td {
+    background: #eef1f4;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+    padding: 6px 16px;
+  }
+  tr.vendor-row:hover td { background: #eef1f4; }
+
+  /* Competitive Gap Monitor */
+  .gap-callout {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 18px;
+    border: 1px solid var(--red-fg);
+    border-left: 4px solid var(--red-fg);
+    border-radius: 6px;
+    background: var(--red-bg);
+    margin: 16px 20px 4px 20px;
+  }
+  .gap-callout .gap-label {
+    flex-shrink: 0;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--red-fg);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .gap-callout p { font-size: 13.5px; color: var(--text); }
+  .hedge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--amber-bg);
+    color: var(--amber-fg);
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .struct-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .struct-badge.hybrid  { background: #e8f0fe; color: var(--blue); }
+  .struct-badge.seat    { background: var(--gray-bg); color: var(--gray-fg); }
+  .struct-badge.credit  { background: #f3e8fd; color: #7627bb; }
+  .struct-badge.none    { background: var(--red-bg); color: var(--red-fg); }
+  .struct-badge.license { background: var(--green-bg); color: var(--green-fg); }
+
+  /* Memo */
+  .memo-controls { padding: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn {
+    appearance: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+  }
+  .btn:hover { background: #f1f3f4; }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { background: #1765cc; }
+  .memo-hint { font-size: 12px; color: var(--text-secondary); max-width: 640px; }
+  .memo-output {
+    display: none;
+    margin: 0 20px 20px 20px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fafafa;
+    padding: 18px 20px;
+    font-family: 'Consolas', 'Menlo', monospace;
+    font-size: 12.5px;
+    white-space: pre-wrap;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .memo-output.visible { display: block; }
+  .copy-confirm { font-size: 12px; color: var(--green-fg); font-weight: 600; display: none; }
+  .copy-confirm.visible { display: inline; }
+
+  /* Scope & limitations */
+  .limits {
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+  .limits summary {
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-secondary);
+  }
+  .limits summary:hover { color: var(--text); }
+  .limits-body { padding: 4px 20px 16px 20px; }
+  .limits-body p { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 10px; max-width: 900px; }
+  .limits-body strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Enablement Radar</h1>
+    <div class="subtitle">A GTM operations console for AI product portfolios: track the freshness of the public documentation field teams depend on, monitor competitive pricing moves across AI labs and vendors, and assemble evidence-based action memos. Demo dataset: the Google AI ecosystem and its competitive set, July 2026 — all figures from public, cited sources; nothing estimated or invented.</div>
+    <div class="asof" id="asof"></div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="panel1" role="tab">1 · Asset Health Scorecard</button>
+    <button class="tab-btn" data-tab="panel2" role="tab">2 · Competitive Gap Monitor</button>
+    <button class="tab-btn" data-tab="panel3" role="tab">3 · Action Memo</button>
+  </div>
+
+  <div class="tab-content active" id="panel1">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Asset Health Scorecard</h2>
+        <span class="panel-desc">Freshness and utilization tracking for customer-facing enablement assets</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:24%">Asset</th>
+            <th style="width:12%">Last updated</th>
+            <th style="width:14%">Freshness</th>
+            <th style="width:13%">Utilization</th>
+            <th>Why it matters commercially</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="legend">
+        <span>Freshness thresholds (illustrative rubric — days-since-update is a proxy; a production version would use event-driven staleness tied to dependency changes):</span>
+        <span class="badge fresh">&le; 30 days</span>
+        <span class="badge aging">31–60 days</span>
+        <span class="badge stale">&gt; 60 days</span>
+        <span class="badge unknown">Unknown — no update date published; not scored</span>
+      </div>
+      <div class="legend">
+        <span><strong>Utilization column:</strong> intentionally unpopulated. Measuring it requires internal instrumentation — asset views/shares, field-team pulls, attach rate to opportunities — not available from public data. Shown as N/A rather than fabricated.</span>
+      </div>
+    </div>
+    <p class="footnote"><strong>Data discipline:</strong> every row is a real, public asset. Commercial-relevance notes are drawn from the underlying strategy analysis. No dates, scores, or figures are estimated — assets without a published update date are marked "unknown" rather than guessed.</p>
+  </div>
+
+  <div class="tab-content" id="panel2">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Competitive Gap Monitor</h2>
+        <span class="panel-desc">Enterprise and prosumer pricing structures across AI labs and vendors — publicly cited figures only</span>
+      </div>
+      <div class="gap-callout">
+        <span class="gap-label">Gap</span>
+        <p><strong>Google Stitch has no pricing structure yet, while every comp across the AI labs does.</strong> Figma — the direct comp — runs a proven seat-plus-shared-credit hybrid; Anthropic sells Enterprise as seat-plus-usage; OpenAI and Perplexity hold flat per-seat structures; Notion and Heptabase run metered credits; Google's own Agent Platform meters consumption. Stitch remains free with no paid tier and no payment method required, its commercial architecture unwritten ahead of an expected Q4 2026 pricing decision. This is the kind of open gap this panel exists to surface.</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:20%">Product</th>
+            <th style="width:16%">Structure</th>
+            <th>Pricing (as cited)</th>
+          </tr>
+        </thead>
+        <tbody id="gap-rows"></tbody>
+      </table>
+      <div class="legend">
+        <span>Structures:</span>
+        <span class="struct-badge hybrid">Seat + credit hybrid</span>
+        <span class="struct-badge seat">Flat per-seat</span>
+        <span class="struct-badge credit">Metered credits</span>
+        <span class="struct-badge license">Per-license subscription</span>
+        <span class="struct-badge none">No paid tier</span>
+      </div>
+    </div>
+    <p class="footnote"><strong>Data discipline:</strong> every figure is publicly sourced and cited. Analyst expectations and third-party-tracker figures are labeled as such and never presented as vendor-confirmed. Where a price is not officially published (NotebookLM Enterprise per-license), none is stated.</p>
+  </div>
+
+  <div class="tab-content" id="panel3">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Action Memo Generator</h2>
+        <span class="panel-desc">Turns the evidence in Panels 1–2 into a sequenced, copyable action memo</span>
+      </div>
+      <div class="memo-controls">
+        <button class="btn primary" id="gen-memo">Generate Action Memo</button>
+        <button class="btn" id="copy-memo" style="display:none">Copy as plain text</button>
+        <span class="copy-confirm" id="copy-confirm">Copied</span>
+        <span class="memo-hint">The generator <strong>sequences</strong> actions already validated in the underlying strategy analysis — it deliberately does not author new ones, so no unverified claim can enter at the recommendation step.</span>
+      </div>
+      <div class="memo-output" id="memo-output"></div>
+    </div>
+    <p class="footnote"><strong>Data discipline:</strong> the memo surfaces pre-validated actions sequenced Now / Next / Later. This panel introduces no new claims.</p>
+  </div>
+
+  <details class="limits">
+    <summary>Prototype scope &amp; limitations — read before evaluating</summary>
+    <div class="limits-body">
+      <p><strong>1. Detection is manual in this prototype.</strong> The "change detected" flag records a change hand-sourced from the vendor's own documentation; no crawler or diffing pipeline runs behind it. The prototype demonstrates the post-detection workflow — diff, urgency flag, affected products, documented upsell path, memo. The production design is a watcher over a registry of tracked assets, diffing snapshots and routing structured alerts, with announcement lead time (here, 27 days) as the key signal.</p>
+      <p><strong>2. Utilization is not measured.</strong> Asset health is freshness <em>and</em> utilization; utilization requires internal instrumentation (asset views/shares, field pulls, opportunity attach rate) unavailable from public data. It is shown as N/A rather than fabricated. Freshness thresholds (30/60 days) are an illustrative rubric; a production version replaces calendar age with event-driven staleness tied to dependency changes.</p>
+      <p><strong>3. The memo generator sequences; it does not author.</strong> Actions are drawn verbatim from the underlying strategy analysis. Asset and competitor selection reflects that analysis's target gap; a production scorecard would run on a jointly owned asset registry, not a hand-picked list.</p>
+    </div>
+  </details>
+
+  <p class="footnote" style="margin-top:12px; text-align:center;">Independent prototype built entirely on public, cited sources. Demo dataset references Google, OpenAI, Perplexity, Figma, Notion, and Heptabase products. Not affiliated with or endorsed by any vendor referenced.</p>
+
+</div>
+
+<script>
+'use strict';
+
+var MS_DAY = 86400000;
+var now = new Date();
+
+document.getElementById('asof').textContent =
+  'Freshness computed as of ' + now.toISOString().slice(0, 10) +
+  ' · all dates and figures from cited public sources; none estimated · data manually sourced, not live-crawled';
+
+function freshness(dateStr) {
+  if (!dateStr) return { cls: 'unknown', label: 'Unknown — not scored' };
+  var days = Math.floor((now - new Date(dateStr + 'T00:00:00Z')) / MS_DAY);
+  if (days <= 30) return { cls: 'fresh', label: days + ' days · Fresh' };
+  if (days <= 60) return { cls: 'aging', label: days + ' days · Aging' };
+  return { cls: 'stale', label: days + ' days · Stale' };
+}
+
+/* ---------- Panel 1: Asset Health Scorecard ---------- */
+var assets = [
+  {
+    vendor: 'Google',
+    id: 'ultra-access',
+    name: '"AI Ultra Access"',
+    publisher: 'Google Workspace Help — Generative AI documentation',
+    lastUpdated: '2026-06-10',
+    note: 'Governs the add-on Google retired as of July 7, 2026. Affected Business/Enterprise customers auto-transition to a lower tier and lose Google Antigravity, Gemini CLI, Gemini Code Assist, and Google Flow outright — Google’s own admin documentation already instructs them to “consider subscribing to Gemini Enterprise” to keep them.',
+    citeLabel: 'Google Workspace Help',
+    citeUrl: 'https://knowledge.workspace.google.com/admin/generative-ai/workspace-with-gemini/ai-ultra-access',
+    changeDetected: true
+  },
+  {
+    vendor: 'Google',
+    id: 'nblm-licensing',
+    name: '"Get licenses for NotebookLM Enterprise"',
+    publisher: 'Google Cloud Documentation',
+    lastUpdated: '2026-05-15',
+    note: 'The licensing path for the enterprise SKU — no admin-facing trigger exists today for a compliance-driven upgrade from the bundled tier.',
+    citeLabel: 'Google Cloud Docs',
+    citeUrl: 'https://docs.cloud.google.com/gemini/enterprise/notebooklm-enterprise/docs/set-up-licensing'
+  },
+  {
+    vendor: 'Google',
+    id: 'nblm-gemini',
+    name: '"Use NotebookLM Enterprise within Gemini Enterprise"',
+    publisher: 'Google Cloud Documentation',
+    lastUpdated: null,
+    note: 'Documents that NotebookLM Enterprise is already reachable from inside the Gemini Enterprise web app, with notebooks syncing bidirectionally — the products already share a front door; the commercial motions behind it do not yet share a playbook.',
+    citeLabel: 'Google Cloud Docs',
+    citeUrl: 'https://docs.cloud.google.com/gemini/enterprise/docs/access-notebooklm'
+  },
+  {
+    vendor: 'Google',
+    id: 'ai-addons',
+    name: '"Compare Google AI expansion add-ons"',
+    publisher: 'Google Workspace Help',
+    lastUpdated: null,
+    note: 'Documents the 2025 bundling of Gemini and NotebookLM into every Workspace Business/Enterprise tier at no separate add-on price — which builds adoption but removes the natural signal that would otherwise tell an admin when to graduate to a compliance-grade, separately priced SKU.',
+    citeLabel: 'Google Workspace Help',
+    citeUrl: 'https://knowledge.workspace.google.com/admin/getting-started/editions/compare-google-ai-expansion-add-ons'
+  },
+  {
+    vendor: 'Google',
+    id: 'io-blog',
+    name: '"Everything new in our Google AI subscriptions, fresh from I/O 2026"',
+    publisher: 'Google Blog (The Keyword) — published May 19, 2026',
+    lastUpdated: '2026-05-19',
+    note: 'Confirms the shift from flat prompt-count limits to a “compute-used” model factoring prompt complexity, features engaged, and chat length, refreshing every five hours against a weekly cap — a real change to how every tier’s value is metered, live this quarter.',
+    citeLabel: 'Google Blog',
+    citeUrl: 'https://blog.google/products-and-platforms/products/google-one/google-ai-subscriptions/'
+  },
+  {
+    vendor: 'Google',
+    id: 'gemini-agent-platform',
+    name: 'Gemini Enterprise Agent Platform — Pricing',
+    publisher: 'Google Cloud',
+    lastUpdated: null,
+    note: 'Consumption-based platform pricing — agent runtime, Agent Gateway, and session metering, with sessions billing commencing September 1, 2026. No published per-seat price. The marketplace rails a Labs enterprise motion would launch on. Figures verified against page 2026-07-07.',
+    citeLabel: 'Google Cloud Pricing',
+    citeUrl: 'https://cloud.google.com/products/gemini-enterprise-agent-platform/pricing'
+  },
+  {
+    vendor: 'Google',
+    id: 'gemini-api-pricing',
+    name: 'Gemini API — Pricing',
+    publisher: 'Google AI for Developers',
+    lastUpdated: null,
+    note: 'Official token pricing — the wholesale layer under every consumer and enterprise price point. Tracked for change detection; figures not reproduced here.',
+    citeLabel: 'ai.google.dev',
+    citeUrl: 'https://ai.google.dev/gemini-api/docs/pricing'
+  },
+  {
+    vendor: 'Google',
+    id: 'labs-google',
+    name: 'Google Labs — Experiments Index',
+    publisher: 'labs.google',
+    lastUpdated: null,
+    note: 'Where new Labs products surface first — the earliest public signal for future commercialization decisions like Stitch’s expected Q4 2026 pricing.',
+    citeLabel: 'labs.google',
+    citeUrl: 'https://labs.google/'
+  },
+  {
+    vendor: 'OpenAI',
+    id: 'openai-pricing',
+    name: 'ChatGPT Business & Enterprise — Pricing',
+    publisher: 'openai.com/business/pricing',
+    lastUpdated: null,
+    note: 'ChatGPT Business at $20/user/month billed annually ($25 monthly, 2+ users); Enterprise at custom pricing via sales. The flat per-seat comp for any enterprise AI motion. Figures verified against page 2026-07-07.',
+    citeLabel: 'OpenAI Pricing',
+    citeUrl: 'https://openai.com/business/pricing/'
+  },
+  {
+    vendor: 'Anthropic',
+    id: 'anthropic-pricing',
+    name: 'Claude Plans & Pricing',
+    publisher: 'claude.com/pricing',
+    lastUpdated: null,
+    note: 'Team seats at $20 (standard) / $100 (premium) per seat/month billed annually; Enterprise sold as $20/seat plus usage billed at API rates — a live seat-plus-usage hybrid in production. Figures verified against page 2026-07-07.',
+    citeLabel: 'Claude Pricing',
+    citeUrl: 'https://claude.com/pricing'
+  },
+  {
+    vendor: 'Perplexity',
+    id: 'perplexity-pricing',
+    name: 'Perplexity Enterprise — Pricing',
+    publisher: 'perplexity.ai/enterprise/pricing',
+    lastUpdated: null,
+    note: 'Enterprise Pro at $40/seat/month ($400/year); Enterprise Max at $325/seat/month ($3,250/year); custom pricing above 250 seats. Figures verified against page 2026-07-07.',
+    citeLabel: 'Perplexity Pricing',
+    citeUrl: 'https://www.perplexity.ai/enterprise/pricing'
+  },
+  {
+    vendor: 'Notion',
+    id: 'notion-pricing',
+    name: 'Notion — Pricing',
+    publisher: 'notion.com/pricing',
+    lastUpdated: null,
+    note: 'Business at $20/member/month; Enterprise custom; Custom Agents free to try, then $10 per 1,000 monthly Notion credits — the flat-rate-to-metered-utility transition in production. Figures verified against page 2026-07-07.',
+    citeLabel: 'Notion Pricing',
+    citeUrl: 'https://www.notion.com/pricing'
+  },
+  {
+    vendor: 'Figma',
+    id: 'figma-pricing',
+    name: 'Figma — Plans & Pricing',
+    publisher: 'figma.com/pricing',
+    lastUpdated: null,
+    note: 'Full seats at $16 (Professional) / $55 (Organization) / $90 (Enterprise) per month, including 3,000 / 3,500 / 4,250 AI credits respectively; other seat types include 500. The direct structural comp for Google Stitch. Figures verified against page 2026-07-07.',
+    citeLabel: 'Figma Pricing',
+    citeUrl: 'https://www.figma.com/pricing/'
+  }
+];
+
+var tbody = document.getElementById('rows');
+var lastVendor = null;
+assets.forEach(function (a) {
+  if (a.vendor !== lastVendor) {
+    lastVendor = a.vendor;
+    var vh = document.createElement('tr');
+    vh.className = 'vendor-row';
+    vh.innerHTML = '<td colspan="5">' + a.vendor + '</td>';
+    tbody.appendChild(vh);
+  }
+  var f = freshness(a.lastUpdated);
+  var tr = document.createElement('tr');
+  tr.setAttribute('data-asset', a.id);
+  if (a.changeDetected) tr.className = 'change-detected';
+  tr.innerHTML =
+    '<td><div class="asset-name">' + a.name + '</div>' +
+    '<div class="asset-publisher">' + a.publisher + '</div>' +
+    (a.changeDetected ? '<span class="change-flag">Change detected — high urgency</span>' : '') +
+    '</td>' +
+    '<td class="date-cell">' + (a.lastUpdated ? a.lastUpdated : '<span class="date-unknown">unknown</span>') + '</td>' +
+    '<td><span class="badge ' + f.cls + '">' + f.label + '</span></td>' +
+    '<td><span class="badge unknown" title="Requires internal instrumentation — see note below">N/A — internal data</span></td>' +
+    '<td><div class="note">' + a.note + '</div>' +
+    '<a class="cite" href="' + a.citeUrl + '" target="_blank" rel="noopener">' + a.citeLabel + '</a></td>';
+  tbody.appendChild(tr);
+
+  if (a.changeDetected) {
+    var diff = document.createElement('tr');
+    diff.className = 'diff-row';
+    diff.innerHTML =
+      '<td colspan="5">' +
+      '<div class="diff-grid">' +
+        '<div class="diff-card before">' +
+          '<div class="diff-card-header">Before — prior to July 7, 2026</div>' +
+          '<div class="diff-card-body">AI Ultra Access is an <strong>active, purchasable</strong> Workspace add-on for Business/Enterprise customers.</div>' +
+        '</div>' +
+        '<div class="diff-card after">' +
+          '<div class="diff-card-header">After — as of July 7, 2026</div>' +
+          '<div class="diff-card-body">The add-on is <strong>retired</strong>. Affected Business/Enterprise customers auto-transition to <strong>"AI Expanded Access"</strong> and lose access to the following unless they subscribe to Gemini Enterprise:' +
+            '<ul class="diff-removed"><li>Google Antigravity</li><li>Gemini CLI</li><li>Gemini Code Assist</li><li>Google Flow</li></ul>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="diff-note"><strong>Why this diff matters:</strong> it records a live, dated commercialization event — not a hypothetical. The vendor’s own admin documentation (updated 2026-06-10) already instructs affected customers to “consider subscribing to Gemini Enterprise,” but nothing routes admins to that path before access silently changes. Note the lead-time signal in the two dates: the help page was updated 2026-06-10 announcing a 2026-07-07 retirement — a 27-day window in which a production cadence would have alerted field teams <em>before</em> customer access changed. ' +
+      '<a class="cite" href="https://knowledge.workspace.google.com/admin/generative-ai/workspace-with-gemini/ai-ultra-access" target="_blank" rel="noopener" style="margin-top:0;">Google Workspace Help</a></div>' +
+      '</td>';
+    tbody.appendChild(diff);
+  }
+});
+
+/* ---------- Panel 2: Competitive Gap Monitor ---------- */
+var comps = [
+  {
+    product: 'Figma AI credits',
+    vendor: 'Figma — direct comp for Google Stitch',
+    structCls: 'hybrid', structLabel: 'Seat + credit hybrid',
+    pricing: 'Full seats at $16 / $55 / $90 per month (Professional / Organization / Enterprise), including 3,000 / 3,500 / 4,250 AI credits respectively; other seat types include 500. Additional shared credits purchasable — from $120/month for 5,000 more per the Figma Blog. Verified 2026-07-07.',
+    hedge: null,
+    citeLabel: 'Figma Pricing (official)',
+    citeUrl: 'https://www.figma.com/pricing/'
+  },
+  {
+    product: 'ChatGPT Business & Enterprise',
+    vendor: 'OpenAI',
+    structCls: 'seat', structLabel: 'Flat per-seat',
+    pricing: 'Business at $20/user/month billed annually ($25 monthly, 2+ users); Enterprise at custom pricing via sales — no rate published. Third-party trackers have reported negotiated Enterprise deals at $40–$60/seat/month on 150+-seat annual terms. Verified 2026-07-07.',
+    hedge: 'Enterprise range is tracker-reported, not OpenAI-published',
+    citeLabel: 'OpenAI Pricing (official)',
+    citeUrl: 'https://openai.com/business/pricing/'
+  },
+  {
+    product: 'Claude Team & Enterprise',
+    vendor: 'Anthropic',
+    structCls: 'hybrid', structLabel: 'Seat + usage hybrid',
+    pricing: 'Team seats at $20 (standard) / $100 (premium) per seat/month billed annually; Enterprise sold as $20/seat plus usage billed at API rates — a seat-plus-usage hybrid running in production today. Verified 2026-07-07.',
+    hedge: null,
+    citeLabel: 'Claude Pricing (official)',
+    citeUrl: 'https://claude.com/pricing'
+  },
+  {
+    product: 'Perplexity Enterprise',
+    vendor: 'Perplexity AI',
+    structCls: 'seat', structLabel: 'Flat per-seat',
+    pricing: 'Enterprise Pro at $40/seat/month ($400/year); Enterprise Max at $325/seat/month ($3,250/year) — split by agentic capability; custom pricing above 250 seats. Verified 2026-07-07.',
+    hedge: null,
+    citeLabel: 'Perplexity Pricing (official)',
+    citeUrl: 'https://www.perplexity.ai/enterprise/pricing'
+  },
+  {
+    product: 'Notion AI — Custom Agents',
+    vendor: 'Notion',
+    structCls: 'credit', structLabel: 'Metered credits',
+    pricing: 'Base plans per-member ($20/member/month Business; Enterprise custom); Custom Agents — autonomous, workspace-wide processes — free to try, then $10 per 1,000 monthly Notion credits. Verified 2026-07-07.',
+    hedge: null,
+    citeLabel: 'Notion Pricing (official)',
+    citeUrl: 'https://www.notion.com/pricing'
+  },
+  {
+    product: 'Gemini Enterprise Agent Platform',
+    vendor: 'Google Cloud',
+    structCls: 'credit', structLabel: 'Consumption-metered',
+    pricing: 'Consumption-based platform pricing — agent runtime, Agent Gateway, and session metering (sessions billing commences September 1, 2026); no published per-seat price. Verified 2026-07-07.',
+    hedge: null,
+    citeLabel: 'Google Cloud Pricing (official)',
+    citeUrl: 'https://cloud.google.com/products/gemini-enterprise-agent-platform/pricing'
+  },
+  {
+    product: 'Heptabase',
+    vendor: 'Heptabase — visual knowledge management',
+    structCls: 'credit', structLabel: 'Metered credits',
+    pricing: 'Strict credit rationing with no parent-company bundling: $8.99/mo for 100 credits, $17.99/mo for 1,800, $53.99/mo for 8,100 with a 33% bulk discount.',
+    hedge: null,
+    citeLabel: 'Heptabase Pricing',
+    citeUrl: 'https://heptabase.com/pricing'
+  },
+  {
+    product: 'Google Stitch',
+    vendor: 'Google Labs — the open gap',
+    structCls: 'none', structLabel: 'No paid tier',
+    pricing: 'Currently free — no paid tier, no payment method required. Paid plans expected by Q4 2026, estimated 30–50% below Figma.',
+    hedge: 'Analyst expectation, not Google-confirmed',
+    citeLabel: 'NxCode',
+    citeUrl: 'https://www.nxcode.io/resources/news/google-stitch-pricing-plans-complete-guide-2026',
+    highlight: true
+  },
+  {
+    product: 'NotebookLM Enterprise',
+    vendor: 'Google Labs — enterprise SKU',
+    structCls: 'license', structLabel: 'Per-license subscription',
+    pricing: 'Sold via Google Cloud Marketplace, 15-license subscription minimum. Exact per-license price not officially published.',
+    hedge: null,
+    citeLabel: 'Google Cloud Docs',
+    citeUrl: 'https://docs.cloud.google.com/gemini/enterprise/notebooklm-enterprise/docs/set-up-licensing'
+  }
+];
+
+var gapBody = document.getElementById('gap-rows');
+comps.forEach(function (c) {
+  var tr = document.createElement('tr');
+  if (c.highlight) tr.className = 'change-detected';
+  tr.innerHTML =
+    '<td><div class="asset-name">' + c.product + '</div>' +
+    '<div class="asset-publisher">' + c.vendor + '</div>' +
+    (c.highlight ? '<span class="change-flag">Pricing structure unwritten</span>' : '') +
+    '</td>' +
+    '<td><span class="struct-badge ' + c.structCls + '">' + c.structLabel + '</span></td>' +
+    '<td><div class="note">' + c.pricing + '</div>' +
+    (c.hedge ? '<div><span class="hedge">' + c.hedge + '</span></div>' : '') +
+    '<a class="cite" href="' + c.citeUrl + '" target="_blank" rel="noopener">' + c.citeLabel + '</a></td>';
+  gapBody.appendChild(tr);
+});
+
+/* ---------- Panel 3: Action Memo Generator ---------- */
+function buildMemo() {
+  var today = now.toISOString().slice(0, 10);
+  var ultraF = freshness('2026-06-10');
+  var licF = freshness('2026-05-15');
+  return 'ACTION MEMO — ENABLEMENT RADAR\n' +
+'Generated: ' + today + '\n' +
+'Basis: underlying strategy analysis (all actions pre-validated there; none\n' +
+'authored by this generator). Demo dataset: Google AI ecosystem, July 2026.\n' +
+'\n' +
+'EVIDENCE FROM THIS TOOL\n' +
+'- Panel 1 (Asset Health): CHANGE DETECTED on "AI Ultra Access" (Workspace\n' +
+'  Help, updated 2026-06-10, ' + ultraF.label.toLowerCase() + '). Add-on retired as of\n' +
+'  July 7, 2026; affected Business/Enterprise customers auto-transition to\n' +
+'  "AI Expanded Access" and lose Google Antigravity, Gemini CLI, Gemini Code\n' +
+'  Assist, and Google Flow unless they subscribe to Gemini Enterprise.\n' +
+'- Panel 1 (Asset Health): "Get licenses for NotebookLM Enterprise" last\n' +
+'  updated 2026-05-15 (' + licF.label.toLowerCase() + '); two tracked assets have no\n' +
+'  published update date.\n' +
+'- Panel 2 (Competitive Gap): Google Stitch has no pricing structure while\n' +
+'  every comp across the AI labs does — Figma runs a seat-plus-credit\n' +
+'  hybrid; Anthropic sells Enterprise as seat-plus-usage; OpenAI and\n' +
+'  Perplexity hold flat per-seat structures; Notion and Heptabase run\n' +
+'  metered credits; Google’s own Agent Platform meters consumption.\n' +
+'  Stitch paid plans expected Q4 2026 (analyst expectation, not\n' +
+'  Google-confirmed). All vendor figures verified against official\n' +
+'  pricing pages 2026-07-07.\n' +
+'\n' +
+'NOW (MONTHS 0-2)\n' +
+'1. Launch a migration playbook against the live July 7 retirement —\n' +
+'   dated, proactive outreach targeting admins losing Flow, Antigravity,\n' +
+'   CLI, and Code Assist; the vendor’s own documentation already states\n' +
+'   the upsell path ("consider subscribing to Gemini Enterprise") but\n' +
+'   nothing routes admins to it before access silently changes.\n' +
+'2. Stand up an upgrade-signal list (compliance flags, admin console\n' +
+'   indicators) predicting when a bundled account needs the enterprise\n' +
+'   SKU — no admin-facing trigger exists today for a compliance-driven\n' +
+'   upgrade.\n' +
+'3. Audit existing enablement content for freshness and stand up an asset\n' +
+'   health system — no system currently measures asset currency at all.\n' +
+'\n' +
+'NEXT (MONTHS 3-4)\n' +
+'4. Pilot the upgrade-signal cadence on the enterprise SKU; stand up a\n' +
+'   recurring customer advisory council cadence.\n' +
+'5. Scope the Stitch enterprise launch jointly with product and\n' +
+'   engineering ahead of its Q4 2026 pricing decision, using existing\n' +
+'   marketplace rails and a Figma-style seat-plus-shared-credit structure.\n' +
+'\n' +
+'LATER (MONTHS 5-6)\n' +
+'6. Bring a hybrid seat-plus-credit pricing proposal to product and\n' +
+'   finance with pilot data in hand — 41% of AI vendors have adopted\n' +
+'   hybrid pricing, up from 27% a year ago (Bessemer / Futurum).\n' +
+'7. Execute the Stitch enterprise launch if its timeline holds; run a\n' +
+'   metrics review to decide what scales.\n' +
+'\n' +
+'ALWAYS-ON\n' +
+'8. Run all cadences above through AI-native tooling so the loop closes\n' +
+'   in days rather than a quarter.\n' +
+'\n' +
+'Scope note: pricing decisions belong to product and finance; this memo\n' +
+'surfaces evidence and sequencing, not price points.';
+}
+
+var memoOut = document.getElementById('memo-output');
+var copyBtn = document.getElementById('copy-memo');
+var copyConfirm = document.getElementById('copy-confirm');
+
+document.getElementById('gen-memo').addEventListener('click', function () {
+  memoOut.textContent = buildMemo();
+  memoOut.classList.add('visible');
+  copyBtn.style.display = 'inline-block';
+  copyConfirm.classList.remove('visible');
+});
+
+copyBtn.addEventListener('click', function () {
+  var done = function () {
+    copyConfirm.classList.add('visible');
+    setTimeout(function () { copyConfirm.classList.remove('visible'); }, 2000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(memoOut.textContent).then(done, done);
+  } else {
+    var r = document.createRange();
+    r.selectNodeContents(memoOut);
+    var sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(r);
+    document.execCommand('copy');
+    sel.removeAllRanges();
+    done();
+  }
+});
+
+/* ---------- Auto-refresh: load data.json written by the GitHub Actions checker ---------- */
+/* Falls back silently to the embedded seed data when data.json is unavailable
+   (e.g., opened as a local file). The checker never invents dates: it reports
+   fetch status, a content hash, and change-since-last-run flags. */
+fetch('data/data.json', { cache: 'no-store' })
+  .then(function (r) { if (!r.ok) throw new Error('no data'); return r.json(); })
+  .then(function (d) {
+    if (d.lastRun) {
+      document.getElementById('asof').textContent +=
+        ' · auto-checked ' + d.lastRun.slice(0, 16).replace('T', ' ') + ' UTC by scheduled pipeline';
+    }
+    (d.assets || []).forEach(function (rec) {
+      var row = document.querySelector('tr[data-asset="' + rec.id + '"]');
+      if (!row) return;
+      var nameCell = row.cells[0];
+      if (rec.detectedLastUpdated) {
+        var f2 = freshness(rec.detectedLastUpdated);
+        row.cells[1].innerHTML = rec.detectedLastUpdated;
+        row.cells[2].innerHTML = '<span class="badge ' + f2.cls + '">' + f2.label + '</span>';
+      }
+      if (rec.changedSinceLastRun) {
+        var flag = document.createElement('span');
+        flag.className = 'change-flag';
+        flag.textContent = 'Content changed on last check';
+        nameCell.appendChild(flag);
+        row.classList.add('change-detected');
+      }
+      if (rec.fetchError) {
+        var err = document.createElement('div');
+        err.className = 'asset-publisher';
+        err.textContent = 'Auto-check failed on last run (' + rec.fetchError + ') — showing last known data';
+        nameCell.appendChild(err);
+      }
+    });
+  })
+  .catch(function () { /* local open or first deploy — embedded seed data stands */ });
+
+/* ---------- Tabs ---------- */
+var tabBtns = document.querySelectorAll('.tab-btn');
+var tabPanes = document.querySelectorAll('.tab-content');
+tabBtns.forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    tabBtns.forEach(function (b) { b.classList.remove('active'); });
+    tabPanes.forEach(function (t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
