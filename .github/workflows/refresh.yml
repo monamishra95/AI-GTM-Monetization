@@ -1,0 +1,35 @@
+name: Refresh radar data
+
+on:
+  schedule:
+    # Daily at 06:00 UTC
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}   # manual "refresh now" button in the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check tracked assets
+        run: python scripts/refresh.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Radar auto-refresh: $(date -u +%Y-%m-%d)"
+            git push
+          fi
