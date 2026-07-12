@@ -2,7 +2,7 @@
 
 A GTM operations console for AI product portfolios: track the freshness of the public documentation field teams depend on, monitor competitive pricing moves across AI labs and vendors, and assemble evidence-based action memos.
 
-**Live demo:** https://monamishra95.github.io/enablement-radar/
+**Live demo:** https://monamishra95.github.io/AI-GTM-Monetization/
 
 ## What it does
 
