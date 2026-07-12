@@ -306,6 +306,84 @@
     color: var(--text);
   }
   .memo-output.visible { display: block; }
+  .memo-output.memo-doc {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    font-size: 13px;
+    white-space: normal;
+    background: var(--surface);
+    padding: 22px 24px;
+  }
+  .memo-doc .memo-title { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
+  .memo-doc .memo-meta { font-size: 12px; color: var(--text-secondary); margin: 4px 0 14px 0; }
+  .memo-doc h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin: 18px 0 10px 0;
+  }
+  .memo-doc h3:first-of-type { margin-top: 6px; }
+  .phase-chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 10px 0 6px 0;
+  }
+  .phase-chip.now      { background: var(--red-bg);   color: var(--red-fg); }
+  .phase-chip.next     { background: var(--amber-bg); color: var(--amber-fg); }
+  .phase-chip.later    { background: #e8f0fe;         color: var(--blue); }
+  .phase-chip.alwayson { background: var(--green-bg); color: var(--green-fg); }
+  .memo-item { margin: 0 0 12px 0; padding-left: 2px; }
+  .memo-item .item-title { font-weight: 600; font-size: 13.5px; }
+  .memo-item .item-num {
+    display: inline-block;
+    min-width: 20px;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .memo-sub { margin: 5px 0 0 24px; }
+  .memo-sub li { margin-bottom: 3px; font-size: 12.5px; color: var(--text); }
+  .memo-sub li .sub-label { font-weight: 600; color: var(--text-secondary); }
+  .eref {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 4px;
+    background: #e8f0fe;
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 6px;
+    vertical-align: 1px;
+  }
+  .evidence-card {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 6px;
+    background: #fafbfc;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  .evidence-card .ev-head { font-weight: 700; font-size: 12.5px; margin-bottom: 3px; }
+  .evidence-card .ev-head .eref { margin-left: 0; margin-right: 6px; }
+  .evidence-card .ev-body { font-size: 12.5px; }
+  .evidence-card .ev-src { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; }
+  .memo-sources { margin: 4px 0 0 20px; }
+  .memo-sources li { font-size: 12.5px; margin-bottom: 4px; }
+  .memo-scope {
+    margin-top: 14px;
+    padding: 8px 12px;
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
   .copy-confirm { font-size: 12px; color: var(--green-fg); font-weight: 600; display: none; }
   .copy-confirm.visible { display: inline; }
 
@@ -744,66 +822,221 @@ comps.forEach(function (c) {
 });
 
 /* ---------- Panel 3: Action Memo Generator ---------- */
+/* radarData is populated by the auto-refresh fetch below when the live
+   pipeline's data.json is available; the memo degrades gracefully without it. */
+var radarData = null;
+
 function buildMemo() {
   var today = now.toISOString().slice(0, 10);
   var ultraF = freshness('2026-06-10');
-  var licF = freshness('2026-05-15');
+
+  // Live pipeline evidence (E5) — computed from data.json when available
+  var pipelineLine;
+  if (radarData && radarData.lastRun) {
+    var recs = radarData.assets || [];
+    var errs = recs.filter(function (r) { return r.fetchError; }).length;
+    var changed = recs.filter(function (r) { return r.changedSinceLastRun; }).length;
+    pipelineLine =
+      'Automated pipeline last ran ' + radarData.lastRun.slice(0, 16).replace('T', ' ') + ' UTC:\n' +
+      '    ' + (recs.length - errs) + '/' + recs.length + ' tracked pages fetched, ' +
+      changed + ' content change(s) flagged, ' + errs + ' fetch error(s) —\n' +
+      '    errors surfaced in the UI, not hidden.';
+  } else {
+    pipelineLine = 'Automated pipeline data unavailable in this session (local open\n' +
+      '    or first deploy) — scorecard running on embedded seed data.';
+  }
+
   return 'ACTION MEMO — ENABLEMENT RADAR\n' +
 'Generated: ' + today + '\n' +
-'Basis: underlying strategy analysis (all actions pre-validated there; none\n' +
-'authored by this generator). Demo dataset: Google AI ecosystem, July 2026.\n' +
+'Structure: recommendations first, each tagged [E#] to the evidence and\n' +
+'sources that support it. All actions pre-validated in the underlying\n' +
+'strategy analysis — this generator sequences; it does not author.\n' +
 '\n' +
-'EVIDENCE FROM THIS TOOL\n' +
-'- Panel 1 (Asset Health): CHANGE DETECTED on "AI Ultra Access" (Workspace\n' +
-'  Help, updated 2026-06-10, ' + ultraF.label.toLowerCase() + '). Add-on retired as of\n' +
-'  July 7, 2026; affected Business/Enterprise customers auto-transition to\n' +
-'  "AI Expanded Access" and lose Google Antigravity, Gemini CLI, Gemini Code\n' +
-'  Assist, and Google Flow unless they subscribe to Gemini Enterprise.\n' +
-'- Panel 1 (Asset Health): "Get licenses for NotebookLM Enterprise" last\n' +
-'  updated 2026-05-15 (' + licF.label.toLowerCase() + '); two tracked assets have no\n' +
-'  published update date.\n' +
-'- Panel 2 (Competitive Gap): Google Stitch has no pricing structure while\n' +
-'  every comp across the AI labs does — Figma runs a seat-plus-credit\n' +
-'  hybrid; Anthropic sells Enterprise as seat-plus-usage; OpenAI and\n' +
-'  Perplexity hold flat per-seat structures; Notion and Heptabase run\n' +
-'  metered credits; Google’s own Agent Platform meters consumption.\n' +
-'  Stitch paid plans expected Q4 2026 (analyst expectation, not\n' +
-'  Google-confirmed). All vendor figures verified against official\n' +
-'  pricing pages 2026-07-07.\n' +
+'RECOMMENDATIONS\n' +
 '\n' +
 'NOW (MONTHS 0-2)\n' +
-'1. Launch a migration playbook against the live July 7 retirement —\n' +
-'   dated, proactive outreach targeting admins losing Flow, Antigravity,\n' +
-'   CLI, and Code Assist; the vendor’s own documentation already states\n' +
-'   the upsell path ("consider subscribing to Gemini Enterprise") but\n' +
-'   nothing routes admins to it before access silently changes.\n' +
+'1. Launch a migration playbook against the live July 7 retirement.\n' +
+'   Dated, proactive outreach to admins losing Flow, Antigravity, CLI,\n' +
+'   and Code Assist; the vendor’s own docs state the upsell path\n' +
+'   ("consider subscribing to Gemini Enterprise") but nothing routes\n' +
+'   admins to it before access silently changes.\n' +
+'   First step: pull the affected-account list; draft admin comms.\n' +
+'   Measure: attach rate among affected accounts within 90 days. [E1]\n' +
 '2. Stand up an upgrade-signal list (compliance flags, admin console\n' +
 '   indicators) predicting when a bundled account needs the enterprise\n' +
-'   SKU — no admin-facing trigger exists today for a compliance-driven\n' +
-'   upgrade.\n' +
-'3. Audit existing enablement content for freshness and stand up an asset\n' +
-'   health system — no system currently measures asset currency at all.\n' +
+'   SKU — no admin-facing trigger exists today.\n' +
+'   First step: define 5-10 candidate signals with field teams.\n' +
+'   Measure: bundled-to-paid conversion among flagged accounts. [E2]\n' +
+'3. Audit enablement content for freshness; stand up the asset health\n' +
+'   system — no system currently measures asset currency at all.\n' +
+'   First step: extend the tracked-asset registry beyond this demo’s 13\n' +
+'   pages. Measure: asset freshness and utilization score. [E5]\n' +
 '\n' +
 'NEXT (MONTHS 3-4)\n' +
 '4. Pilot the upgrade-signal cadence on the enterprise SKU; stand up a\n' +
-'   recurring customer advisory council cadence.\n' +
-'5. Scope the Stitch enterprise launch jointly with product and\n' +
-'   engineering ahead of its Q4 2026 pricing decision, using existing\n' +
-'   marketplace rails and a Figma-style seat-plus-shared-credit structure.\n' +
+'   recurring customer advisory council. Measure: blocker cycle time\n' +
+'   raised -> routed -> resolved. [E2]\n' +
+'5. Scope the Stitch enterprise launch with product and engineering\n' +
+'   ahead of its expected Q4 2026 pricing decision, using existing\n' +
+'   marketplace rails and a Figma-style seat-plus-shared-credit\n' +
+'   structure. Measure: time-to-first-enterprise-deal post-launch. [E3]\n' +
 '\n' +
 'LATER (MONTHS 5-6)\n' +
 '6. Bring a hybrid seat-plus-credit pricing proposal to product and\n' +
-'   finance with pilot data in hand — 41% of AI vendors have adopted\n' +
-'   hybrid pricing, up from 27% a year ago (Bessemer / Futurum).\n' +
+'   finance with pilot data in hand. [E4]\n' +
 '7. Execute the Stitch enterprise launch if its timeline holds; run a\n' +
-'   metrics review to decide what scales.\n' +
+'   metrics review to decide what scales. [E3]\n' +
 '\n' +
 'ALWAYS-ON\n' +
-'8. Run all cadences above through AI-native tooling so the loop closes\n' +
-'   in days rather than a quarter.\n' +
+'8. Run every cadence above through AI-native tooling so the loop\n' +
+'   closes in days, not quarters — this radar’s daily pipeline is the\n' +
+'   working example. [E5]\n' +
+'\n' +
+'SUPPORTING EVIDENCE — FROM ENABLEMENT RADAR\n' +
+'\n' +
+'[E1] Panel 1, Asset Health: CHANGE DETECTED on "AI Ultra Access"\n' +
+'    (Workspace Help, updated 2026-06-10, ' + ultraF.label.toLowerCase() + ').\n' +
+'    Add-on retired July 7, 2026; affected Business/Enterprise customers\n' +
+'    auto-transition to "AI Expanded Access" and lose Google Antigravity,\n' +
+'    Gemini CLI, Gemini Code Assist, and Google Flow unless they\n' +
+'    subscribe to Gemini Enterprise. Lead-time signal: the page announced\n' +
+'    the change 27 days before it took effect.\n' +
+'    Source: Google Workspace Help (primary).\n' +
+'[E2] Panel 1, Asset Health: NotebookLM Enterprise licensing docs show a\n' +
+'    15-license minimum via Cloud Marketplace, while bundling docs show\n' +
+'    Gemini/NotebookLM folded into every Workspace Business/Enterprise\n' +
+'    tier — adoption without an upgrade signal.\n' +
+'    Sources: Google Cloud Docs; Google Workspace Help (primary).\n' +
+'[E3] Panel 2, Competitive Gap: Stitch has no pricing structure while\n' +
+'    every comp across the AI labs does — Figma seat+credit hybrid;\n' +
+'    Anthropic seat+usage; OpenAI and Perplexity flat per-seat; Notion\n' +
+'    and Heptabase metered credits; Google’s own Agent Platform\n' +
+'    consumption-metered. Stitch paid plans expected Q4 2026 (analyst\n' +
+'    expectation, not Google-confirmed).\n' +
+'    Sources: official vendor pricing pages, verified 2026-07-07;\n' +
+'    NxCode (labeled analyst expectation).\n' +
+'[E4] Panel 2, Competitive Gap: hybrid pricing adoption rose 27% -> 41%\n' +
+'    among AI vendors in 12 months; Anthropic already sells Enterprise\n' +
+'    as seat-plus-usage in production.\n' +
+'    Sources: Bessemer / Futurum; claude.com/pricing (verified\n' +
+'    2026-07-07).\n' +
+'[E5] Live pipeline (GitHub Actions, daily 06:00 UTC):\n' +
+'    ' + pipelineLine + '\n' +
+'\n' +
+'DATA SOURCES POWERING THIS MEMO\n' +
+'- 13 public pages tracked daily by the automated pipeline (Google\n' +
+'  Workspace/Cloud docs, Google Blog, labs.google, Gemini API pricing,\n' +
+'  and official pricing pages of OpenAI, Anthropic, Perplexity, Notion,\n' +
+'  Figma) — content-hashed, diffed, snapshotted in git.\n' +
+'- Vendor-official pricing pages, figures verified 2026-07-07; third-\n' +
+'  party or analyst figures always labeled as such.\n' +
+'- Underlying strategy analysis (validated actions and prioritization;\n' +
+'  full citations in its Works Cited).\n' +
+'- No figure in this memo is invented, estimated, or extrapolated.\n' +
 '\n' +
 'Scope note: pricing decisions belong to product and finance; this memo\n' +
 'surfaces evidence and sequencing, not price points.';
+}
+
+/* Rich HTML rendering of the same memo content — layout only, wording unchanged.
+   The "Copy as plain text" button still copies buildMemo()'s text version. */
+function buildMemoHTML() {
+  var today = now.toISOString().slice(0, 10);
+  var ultraF = freshness('2026-06-10');
+
+  var pipelineHtml;
+  if (radarData && radarData.lastRun) {
+    var recs = radarData.assets || [];
+    var errs = recs.filter(function (r) { return r.fetchError; }).length;
+    var changed = recs.filter(function (r) { return r.changedSinceLastRun; }).length;
+    pipelineHtml = 'Automated pipeline last ran <strong>' + radarData.lastRun.slice(0, 16).replace('T', ' ') +
+      ' UTC</strong>: ' + (recs.length - errs) + '/' + recs.length + ' tracked pages fetched, ' +
+      changed + ' content change(s) flagged, ' + errs + ' fetch error(s) — errors surfaced in the UI, not hidden.';
+  } else {
+    pipelineHtml = 'Automated pipeline data unavailable in this session (local open or first deploy) — scorecard running on embedded seed data.';
+  }
+
+  function item(num, title, subs, refs) {
+    var h = '<div class="memo-item"><span class="item-num">' + num + '.</span> <span class="item-title">' + title + '</span>' +
+      refs.map(function (r) { return '<span class="eref">' + r + '</span>'; }).join('');
+    if (subs.length) {
+      h += '<ul class="memo-sub">' + subs.map(function (s) {
+        return '<li>' + (s.label ? '<span class="sub-label">' + s.label + ':</span> ' : '') + s.text + '</li>';
+      }).join('') + '</ul>';
+    }
+    return h + '</div>';
+  }
+
+  function evCard(id, head, body, src) {
+    return '<div class="evidence-card"><div class="ev-head"><span class="eref">' + id + '</span>' + head + '</div>' +
+      '<div class="ev-body">' + body + '</div><div class="ev-src"><strong>Source:</strong> ' + src + '</div></div>';
+  }
+
+  return '<div class="memo-title">ACTION MEMO — ENABLEMENT RADAR</div>' +
+  '<div class="memo-meta">Generated: ' + today + ' · Recommendations first, each tagged [E#] to the evidence and sources that support it. All actions pre-validated in the underlying strategy analysis — this generator sequences; it does not author.</div>' +
+
+  '<h3>Recommendations</h3>' +
+  '<div class="phase-chip now">Now · Months 0–2</div>' +
+  item(1, 'Launch a migration playbook against the live July 7 retirement.', [
+    {label: null, text: 'Dated, proactive outreach to admins losing Flow, Antigravity, CLI, and Code Assist; the vendor’s own docs state the upsell path (“consider subscribing to Gemini Enterprise”) but nothing routes admins to it before access silently changes.'},
+    {label: 'First step', text: 'Pull the affected-account list; draft admin comms.'},
+    {label: 'Measure', text: 'Attach rate among affected accounts within 90 days.'}
+  ], ['E1']) +
+  item(2, 'Stand up an upgrade-signal list predicting when a bundled account needs the enterprise SKU.', [
+    {label: null, text: 'Compliance flags, admin console indicators — no admin-facing trigger exists today.'},
+    {label: 'First step', text: 'Define 5–10 candidate signals with field teams.'},
+    {label: 'Measure', text: 'Bundled-to-paid conversion among flagged accounts.'}
+  ], ['E2']) +
+  item(3, 'Audit enablement content for freshness; stand up the asset health system.', [
+    {label: null, text: 'No system currently measures asset currency at all.'},
+    {label: 'First step', text: 'Extend the tracked-asset registry beyond this demo’s 13 pages.'},
+    {label: 'Measure', text: 'Asset freshness and utilization score.'}
+  ], ['E5']) +
+
+  '<div class="phase-chip next">Next · Months 3–4</div>' +
+  item(4, 'Pilot the upgrade-signal cadence on the enterprise SKU; stand up a recurring customer advisory council.', [
+    {label: 'Measure', text: 'Blocker cycle time raised → routed → resolved.'}
+  ], ['E2']) +
+  item(5, 'Scope the Stitch enterprise launch with product and engineering ahead of its expected Q4 2026 pricing decision.', [
+    {label: null, text: 'Use existing marketplace rails and a Figma-style seat-plus-shared-credit structure.'},
+    {label: 'Measure', text: 'Time-to-first-enterprise-deal post-launch.'}
+  ], ['E3']) +
+
+  '<div class="phase-chip later">Later · Months 5–6</div>' +
+  item(6, 'Bring a hybrid seat-plus-credit pricing proposal to product and finance with pilot data in hand.', [], ['E4']) +
+  item(7, 'Execute the Stitch enterprise launch if its timeline holds; run a metrics review to decide what scales.', [], ['E3']) +
+
+  '<div class="phase-chip alwayson">Always-on</div>' +
+  item(8, 'Run every cadence above through AI-native tooling so the loop closes in days, not quarters.', [
+    {label: null, text: 'This radar’s daily pipeline is the working example.'}
+  ], ['E5']) +
+
+  '<h3>Supporting Evidence — from Enablement Radar</h3>' +
+  evCard('E1', 'Panel 1, Asset Health: change detected on “AI Ultra Access”.',
+    'Workspace Help page updated 2026-06-10 (' + ultraF.label.toLowerCase() + '). Add-on retired July 7, 2026; affected Business/Enterprise customers auto-transition to “AI Expanded Access” and lose Google Antigravity, Gemini CLI, Gemini Code Assist, and Google Flow unless they subscribe to Gemini Enterprise. Lead-time signal: the page announced the change 27 days before it took effect.',
+    'Google Workspace Help (primary).') +
+  evCard('E2', 'Panel 1, Asset Health: adoption without an upgrade signal.',
+    'NotebookLM Enterprise licensing docs show a 15-license minimum via Cloud Marketplace, while bundling docs show Gemini/NotebookLM folded into every Workspace Business/Enterprise tier.',
+    'Google Cloud Docs; Google Workspace Help (primary).') +
+  evCard('E3', 'Panel 2, Competitive Gap: Stitch has no pricing structure while every comp across the AI labs does.',
+    'Figma seat+credit hybrid; Anthropic seat+usage; OpenAI and Perplexity flat per-seat; Notion and Heptabase metered credits; Google’s own Agent Platform consumption-metered. Stitch paid plans expected Q4 2026 (analyst expectation, not Google-confirmed).',
+    'Official vendor pricing pages, verified 2026-07-07; NxCode (labeled analyst expectation).') +
+  evCard('E4', 'Panel 2, Competitive Gap: hybrid pricing is becoming the norm.',
+    'Hybrid pricing adoption rose 27% → 41% among AI vendors in 12 months; Anthropic already sells Enterprise as seat-plus-usage in production.',
+    'Bessemer / Futurum; claude.com/pricing (verified 2026-07-07).') +
+  evCard('E5', 'Live pipeline (GitHub Actions, daily 06:00 UTC).',
+    pipelineHtml,
+    'data/data.json, written by scripts/refresh.py; snapshots committed to git.') +
+
+  '<h3>Data Sources Powering This Memo</h3>' +
+  '<ul class="memo-sources">' +
+  '<li><strong>13 public pages tracked daily</strong> by the automated pipeline (Google Workspace/Cloud docs, Google Blog, labs.google, Gemini API pricing, and official pricing pages of OpenAI, Anthropic, Perplexity, Notion, Figma) — content-hashed, diffed, snapshotted in git.</li>' +
+  '<li><strong>Vendor-official pricing pages</strong>, figures verified 2026-07-07; third-party or analyst figures always labeled as such.</li>' +
+  '<li><strong>Underlying strategy analysis</strong> (validated actions and prioritization; full citations in its Works Cited).</li>' +
+  '<li><strong>No figure in this memo is invented, estimated, or extrapolated.</strong></li>' +
+  '</ul>' +
+
+  '<div class="memo-scope"><strong>Scope note:</strong> pricing decisions belong to product and finance; this memo surfaces evidence and sequencing, not price points.</div>';
 }
 
 var memoOut = document.getElementById('memo-output');
@@ -811,8 +1044,9 @@ var copyBtn = document.getElementById('copy-memo');
 var copyConfirm = document.getElementById('copy-confirm');
 
 document.getElementById('gen-memo').addEventListener('click', function () {
-  memoOut.textContent = buildMemo();
+  memoOut.innerHTML = buildMemoHTML();
   memoOut.classList.add('visible');
+  memoOut.classList.add('memo-doc');
   copyBtn.style.display = 'inline-block';
   copyConfirm.classList.remove('visible');
 });
@@ -823,7 +1057,7 @@ copyBtn.addEventListener('click', function () {
     setTimeout(function () { copyConfirm.classList.remove('visible'); }, 2000);
   };
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(memoOut.textContent).then(done, done);
+    navigator.clipboard.writeText(buildMemo()).then(done, done);
   } else {
     var r = document.createRange();
     r.selectNodeContents(memoOut);
@@ -842,6 +1076,7 @@ copyBtn.addEventListener('click', function () {
 fetch('data/data.json', { cache: 'no-store' })
   .then(function (r) { if (!r.ok) throw new Error('no data'); return r.json(); })
   .then(function (d) {
+    radarData = d;
     if (d.lastRun) {
       document.getElementById('asof').textContent +=
         ' · auto-checked ' + d.lastRun.slice(0, 16).replace('T', ' ') + ' UTC by scheduled pipeline';
