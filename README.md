@@ -2,7 +2,7 @@
 
 A GTM operations console for AI product portfolios: track the freshness of the public documentation field teams depend on, monitor competitive pricing moves across AI labs and vendors, and assemble evidence-based action memos.
 
-**Live demo:**https://monamishra95.github.io/AI-GTM-Monetization/
+**Live demo:** _add your deployed URL here_
 
 ## What it does
 
@@ -11,7 +11,6 @@ Three panels in a single dependency-free HTML file. Demo dataset: the Google AI 
 1. **Asset Health Scorecard** — scores 15 real, public pages across eight vendors (Google, OpenAI, Anthropic, Perplexity, Notion, Figma, Mistral, Runway) for freshness, each with a cited note on commercial relevance. Centerpiece: a before/after diff recording the July 7, 2026 retirement of the Workspace "AI Ultra Access" add-on — a live, dated commercialization event, including the 27-day lead window between the documentation update (June 10) and the effective date. A utilization column is shown as N/A rather than fabricated, since measuring it requires internal instrumentation.
 2. **Competitive Gap Monitor** — pricing structures across the AI labs: Figma (seat+credit hybrid), Anthropic (seat+usage hybrid), OpenAI and Perplexity (flat per-seat), Notion and Heptabase (metered credits), Google's Gemini Enterprise Agent Platform (consumption-metered), Google Stitch, and NotebookLM Enterprise. All vendor figures verified against official pricing pages on 2026-07-07. The finding it surfaces: Stitch has no pricing structure while every comp does, ahead of an expected Q4 2026 pricing decision.
 3. **Action Memo Generator** — assembles a Now / Next / Later memo from the evidence in Panels 1–2. It sequences actions already validated in the underlying strategy analysis; it deliberately does not author new ones, so no unverified claim can enter at the recommendation step.
-4. **Commercial Sizing & Signals** — scenario-based TAM sizing for NotebookLM Enterprise (bottom-up led: BLS-verified seat populations × declared attach scenarios × tracker-reported price) and Google Flow (top-down led: verified $847M category × declared segment share), with on-screen definitions and formulas for every concept, a four-tier confidence badge on every input (Confirmed / Tracker / Unverified / Scenario), and triangulation-gap diagnostics. Includes the internal-signals schema (PMF metrics and thresholds) a production version would populate from inside — shown as designed-but-N/A rather than fabricated.
 
 ## Data discipline
 
