@@ -384,6 +384,91 @@
     font-size: 12px;
     color: var(--text-secondary);
   }
+
+  /* Panel 4: Sizing & Signals */
+  .conf {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: 1px;
+  }
+  .conf.confirmed  { background: var(--green-bg); color: var(--green-fg); }
+  .conf.tracker    { background: var(--amber-bg); color: var(--amber-fg); }
+  .conf.unverified { background: var(--red-bg);   color: var(--red-fg); }
+  .conf.scenario   { background: #f3e8fd;         color: #7627bb; }
+  .defs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 16px 20px;
+  }
+  @media (max-width: 860px) { .defs { grid-template-columns: 1fr; } }
+  .def-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    background: #fafbfc;
+  }
+  .def-card .def-term { font-weight: 700; font-size: 12.5px; }
+  .def-card .def-body { font-size: 12px; color: var(--text); margin-top: 3px; }
+  .formula {
+    display: block;
+    font-family: 'Consolas', 'Menlo', monospace;
+    font-size: 12px;
+    background: #f1f3f4;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-top: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .sizing-block { padding: 16px 20px; border-top: 1px solid var(--border); }
+  .sizing-block h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .sizing-block .lead-leg { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
+  .sizing-table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+  .sizing-table th {
+    font-size: 10.5px; padding: 6px 10px;
+  }
+  .sizing-table td { padding: 8px 10px; font-size: 12.5px; }
+  .sizing-table td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  .diag-note {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber-fg);
+    border-radius: 4px;
+    background: #fffdf5;
+    font-size: 12.5px;
+  }
+  .diag-note strong { color: var(--amber-fg); }
+  .sig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  @media (max-width: 860px) { .sig-grid { grid-template-columns: 1fr; } }
+  .sig-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .sig-card-header {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border);
+  }
+  .sig-card table { width: 100%; }
+  .sig-card td { padding: 7px 12px; font-size: 12px; vertical-align: top; }
+  .sig-card td.metric { font-weight: 600; width: 38%; }
+  .sig-card .thresh { color: var(--text-secondary); font-size: 11.5px; display: block; margin-top: 1px; }
   .copy-confirm { font-size: 12px; color: var(--green-fg); font-weight: 600; display: none; }
   .copy-confirm.visible { display: inline; }
 
@@ -420,6 +505,7 @@
     <button class="tab-btn active" data-tab="panel1" role="tab">1 · Asset Health Scorecard</button>
     <button class="tab-btn" data-tab="panel2" role="tab">2 · Competitive Gap Monitor</button>
     <button class="tab-btn" data-tab="panel3" role="tab">3 · Action Memo</button>
+    <button class="tab-btn" data-tab="panel4" role="tab">4 · Sizing &amp; Signals</button>
   </div>
 
   <div class="tab-content active" id="panel1">
@@ -462,7 +548,7 @@
       </div>
       <div class="gap-callout">
         <span class="gap-label">Gap</span>
-        <p><strong>Google Stitch has no pricing structure yet, while every comp across the AI labs does.</strong> Figma — the direct comp — runs a proven seat-plus-shared-credit hybrid; Anthropic sells Enterprise as seat-plus-usage; OpenAI and Perplexity hold flat per-seat structures; Notion and Heptabase run metered credits; Google's own Agent Platform meters consumption. Stitch remains free with no paid tier and no payment method required, its commercial architecture unwritten ahead of an expected Q4 2026 pricing decision. This is the kind of open gap this panel exists to surface.</p>
+        <p><strong>Google Stitch has no pricing structure yet, while every comp across the AI labs does.</strong> Figma — the direct comp — runs a proven seat-plus-shared-credit hybrid; Anthropic and Mistral sell seat-plus-usage; OpenAI and Perplexity hold flat per-seat structures; Runway, Notion, and Heptabase run metered credits; Google's own Agent Platform meters consumption. Stitch remains free with no paid tier and no payment method required, its commercial architecture unwritten ahead of an expected Q4 2026 pricing decision. This is the kind of open gap this panel exists to surface.</p>
       </div>
       <table>
         <thead>
@@ -502,6 +588,65 @@
     </div>
     <p class="footnote"><strong>Data discipline:</strong> the memo surfaces pre-validated actions sequenced Now / Next / Later. This panel introduces no new claims.</p>
   </div>
+
+  <div class="tab-content" id="panel4">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Commercial Sizing &amp; Signals</h2>
+        <span class="panel-desc">Scenario-based market sizing (NotebookLM Enterprise, Google Flow) + the internal-signals schema a production version would run on</span>
+      </div>
+
+      <div class="defs">
+        <div class="def-card">
+          <div class="def-term">TAM — Total Addressable Market</div>
+          <div class="def-body">The total annual revenue opportunity if a product captured 100% of the market it can serve. Always an upper bound, never a forecast. Two independent estimation methods below; the defensible answer is where they overlap.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Top-down formula</div>
+          <div class="def-body">Start from a published category size, narrow to the addressable part. Two variants depending on whether the category is legacy spend being converted to AI, or already AI-native:
+            <span class="formula">TAM = Legacy_category_$ × AI_conversion_rate</span>
+            <span class="formula">TAM = AI_native_category_$ × addressable_segment_share</span>
+          </div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Bottom-up formula</div>
+          <div class="def-body">Start from the people who would use the product, multiply up:
+            <span class="formula">TAM = Seat_population × Attach_rate × Price_per_seat_annual</span>
+          </div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Attach rate</div>
+          <div class="def-body">The % of an addressable population that converts to <em>paid</em> seats. No public source provides this for any specific product — it is always an assumption. Here it is a declared <span class="conf scenario">Scenario</span> parameter (1% / 5% / 10%), never presented as data.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">AI conversion rate</div>
+          <div class="def-body">The % of legacy-category spend or firms converting to AI tools. Published measurements disagree because their bars differ: Census BTOS 19.8% of all US firms / 37% of 250+-employee firms use AI in any function (May 2026); a16z 29% of the Fortune 500 are live, paying enterprise-AI customers (Apr 2026). Range them; never average them.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Triangulation rule</div>
+          <div class="def-body">Run top-down and bottom-up independently. Overlap = defensible band. A large gap is diagnostic, not noise: it means the category boundary is too broad, the attach assumption is miscalibrated, or the seat population is too narrow. Fix the assumption the gap points to — don't split the difference.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Confidence tiers used below</div>
+          <div class="def-body"><span class="conf confirmed">Confirmed</span> verified by direct fetch of the primary source, dated &nbsp;·&nbsp; <span class="conf tracker">Tracker</span> third-party figure, not vendor-published &nbsp;·&nbsp; <span class="conf unverified">Unverified</span> carried from earlier research, not independently re-fetched &nbsp;·&nbsp; <span class="conf scenario">Scenario</span> declared assumption, user-selected, not data.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Standing caveats (apply to everything below)</div>
+          <div class="def-body">Seat populations are US-only, formal-job-title-only (BLS) — a floor, not a ceiling. Free-tier usage is invisible to spend data. Bundled products (NotebookLM/Flow ship inside Workspace and AI subscriptions) are undercounted by procurement panels. Sizes the <em>paid</em> opportunity only.</div>
+        </div>
+      </div>
+
+      <div class="sizing-block" id="nblm-sizing"></div>
+      <div class="sizing-block" id="flow-sizing"></div>
+
+      <div class="sizing-block">
+        <h4>Internal Signals Schema — designed, deliberately unpopulated</h4>
+        <div class="lead-leg">Every field below requires internal instrumentation this prototype cannot access from public data. The schema is the point: it defines exactly what a production version would measure from day one inside. Metric definitions and thresholds from the AI-product PMF framework (Willison, May 2026) and Google Labs' own operating model as described by its VP of Labs (Sequoia Training Data podcast). Labs context: 10,000 weekly active users is a celebrated early milestone; products run in time-boxed hundred-day sprints toward one of three outcomes — graduate, stay in Labs, or retire; the real gate is "could this be a business?"</div>
+        <div class="sig-grid" id="sig-cards"></div>
+      </div>
+    </div>
+    <p class="footnote"><strong>Data discipline:</strong> every sourced figure carries a confidence tier and an as-of date. Scenario parameters (attach rate, segment share) are user-selected assumptions, visually labeled, and never presented as data. The per-license price input is tracker-reported — its absence from Google's own licensing page was re-confirmed by direct fetch on 2026-07-12.</p>
+  </div><!-- /panel4 -->
 
   <details class="limits">
     <summary>Prototype scope &amp; limitations — read before evaluating</summary>
@@ -666,6 +811,26 @@ var assets = [
     note: 'Full seats at $16 (Professional) / $55 (Organization) / $90 (Enterprise) per month, including 3,000 / 3,500 / 4,250 AI credits respectively; other seat types include 500. The direct structural comp for Google Stitch. Figures verified against page 2026-07-07.',
     citeLabel: 'Figma Pricing',
     citeUrl: 'https://www.figma.com/pricing/'
+  },
+  {
+    vendor: 'Mistral AI',
+    id: 'mistral-pricing',
+    name: 'Mistral — Plans & Pricing',
+    publisher: 'mistral.ai/pricing',
+    lastUpdated: null,
+    note: 'Pro at $14.99/month; Team at $24.99/user/month; Enterprise custom (private deployments, custom models). Plans can extend past limits with pay-as-you-go credits billed at API rates — another live seat-plus-usage hybrid. Figures verified against page 2026-07-12.',
+    citeLabel: 'Mistral Pricing',
+    citeUrl: 'https://mistral.ai/pricing'
+  },
+  {
+    vendor: 'Runway',
+    id: 'runway-pricing',
+    name: 'Runway — Plans & Pricing',
+    publisher: 'runwayml.com/pricing',
+    lastUpdated: null,
+    note: 'Standard $12 / Pro $28 / Max $76 per month billed annually, including 625 / 2,250 / 9,500 monthly credits; Enterprise custom. The direct structural comp for Google Flow’s credit-metered video tiers — and its credits meter Google’s own Veo 3.1 and Nano Banana Pro models. Figures verified against page 2026-07-12.',
+    citeLabel: 'Runway Pricing',
+    citeUrl: 'https://runwayml.com/pricing'
   }
 ];
 
@@ -776,6 +941,24 @@ var comps = [
     citeUrl: 'https://cloud.google.com/products/gemini-enterprise-agent-platform/pricing'
   },
   {
+    product: 'Mistral Vibe — Team & Enterprise',
+    vendor: 'Mistral AI',
+    structCls: 'hybrid', structLabel: 'Seat + usage hybrid',
+    pricing: 'Pro at $14.99/month; Team at $24.99/user/month; Enterprise custom (private deployments, custom models, SSO, audit logs). Plans extend past limits with pay-as-you-go credits billed at API rates. Verified 2026-07-12.',
+    hedge: null,
+    citeLabel: 'Mistral Pricing (official)',
+    citeUrl: 'https://mistral.ai/pricing'
+  },
+  {
+    product: 'Runway',
+    vendor: 'Runway — direct comp for Google Flow',
+    structCls: 'credit', structLabel: 'Metered credits',
+    pricing: 'Standard $12 / Pro $28 / Max $76 per month billed annually, with 625 / 2,250 / 9,500 monthly credits; extra credits purchasable (1,000 minimum); Enterprise custom credits + SSO. Its credit system meters Google’s own Veo 3.1 and Nano Banana Pro models. Verified 2026-07-12.',
+    hedge: null,
+    citeLabel: 'Runway Pricing (official)',
+    citeUrl: 'https://runwayml.com/pricing'
+  },
+  {
     product: 'Heptabase',
     vendor: 'Heptabase — visual knowledge management',
     structCls: 'credit', structLabel: 'Metered credits',
@@ -869,7 +1052,7 @@ function buildMemo() {
 '   Measure: bundled-to-paid conversion among flagged accounts. [E2]\n' +
 '3. Audit enablement content for freshness; stand up the asset health\n' +
 '   system — no system currently measures asset currency at all.\n' +
-'   First step: extend the tracked-asset registry beyond this demo’s 13\n' +
+'   First step: extend the tracked-asset registry beyond this demo’s 15\n' +
 '   pages. Measure: asset freshness and utilization score. [E5]\n' +
 '\n' +
 'NEXT (MONTHS 3-4)\n' +
@@ -909,10 +1092,10 @@ function buildMemo() {
 '    Sources: Google Cloud Docs; Google Workspace Help (primary).\n' +
 '[E3] Panel 2, Competitive Gap: Stitch has no pricing structure while\n' +
 '    every comp across the AI labs does — Figma seat+credit hybrid;\n' +
-'    Anthropic seat+usage; OpenAI and Perplexity flat per-seat; Notion\n' +
-'    and Heptabase metered credits; Google’s own Agent Platform\n' +
-'    consumption-metered. Stitch paid plans expected Q4 2026 (analyst\n' +
-'    expectation, not Google-confirmed).\n' +
+'    Anthropic and Mistral seat+usage; OpenAI and Perplexity flat\n' +
+'    per-seat; Runway, Notion, and Heptabase metered credits; Google’s\n' +
+'    own Agent Platform consumption-metered. Stitch paid plans expected\n' +
+'    Q4 2026 (analyst expectation, not Google-confirmed).\n' +
 '    Sources: official vendor pricing pages, verified 2026-07-07;\n' +
 '    NxCode (labeled analyst expectation).\n' +
 '[E4] Panel 2, Competitive Gap: hybrid pricing adoption rose 27% -> 41%\n' +
@@ -924,10 +1107,10 @@ function buildMemo() {
 '    ' + pipelineLine + '\n' +
 '\n' +
 'DATA SOURCES POWERING THIS MEMO\n' +
-'- 13 public pages tracked daily by the automated pipeline (Google\n' +
+'- 15 public pages tracked daily by the automated pipeline (Google\n' +
 '  Workspace/Cloud docs, Google Blog, labs.google, Gemini API pricing,\n' +
 '  and official pricing pages of OpenAI, Anthropic, Perplexity, Notion,\n' +
-'  Figma) — content-hashed, diffed, snapshotted in git.\n' +
+'  Figma, Mistral, Runway) — content-hashed, diffed, snapshotted in git.\n' +
 '- Vendor-official pricing pages, figures verified 2026-07-07; third-\n' +
 '  party or analyst figures always labeled as such.\n' +
 '- Underlying strategy analysis (validated actions and prioritization;\n' +
@@ -989,7 +1172,7 @@ function buildMemoHTML() {
   ], ['E2']) +
   item(3, 'Audit enablement content for freshness; stand up the asset health system.', [
     {label: null, text: 'No system currently measures asset currency at all.'},
-    {label: 'First step', text: 'Extend the tracked-asset registry beyond this demo’s 13 pages.'},
+    {label: 'First step', text: 'Extend the tracked-asset registry beyond this demo’s 15 pages.'},
     {label: 'Measure', text: 'Asset freshness and utilization score.'}
   ], ['E5']) +
 
@@ -1019,7 +1202,7 @@ function buildMemoHTML() {
     'NotebookLM Enterprise licensing docs show a 15-license minimum via Cloud Marketplace, while bundling docs show Gemini/NotebookLM folded into every Workspace Business/Enterprise tier.',
     'Google Cloud Docs; Google Workspace Help (primary).') +
   evCard('E3', 'Panel 2, Competitive Gap: Stitch has no pricing structure while every comp across the AI labs does.',
-    'Figma seat+credit hybrid; Anthropic seat+usage; OpenAI and Perplexity flat per-seat; Notion and Heptabase metered credits; Google’s own Agent Platform consumption-metered. Stitch paid plans expected Q4 2026 (analyst expectation, not Google-confirmed).',
+    'Figma seat+credit hybrid; Anthropic and Mistral seat+usage; OpenAI and Perplexity flat per-seat; Runway, Notion, and Heptabase metered credits; Google’s own Agent Platform consumption-metered. Stitch paid plans expected Q4 2026 (analyst expectation, not Google-confirmed).',
     'Official vendor pricing pages, verified 2026-07-07; NxCode (labeled analyst expectation).') +
   evCard('E4', 'Panel 2, Competitive Gap: hybrid pricing is becoming the norm.',
     'Hybrid pricing adoption rose 27% → 41% among AI vendors in 12 months; Anthropic already sells Enterprise as seat-plus-usage in production.',
@@ -1030,7 +1213,7 @@ function buildMemoHTML() {
 
   '<h3>Data Sources Powering This Memo</h3>' +
   '<ul class="memo-sources">' +
-  '<li><strong>13 public pages tracked daily</strong> by the automated pipeline (Google Workspace/Cloud docs, Google Blog, labs.google, Gemini API pricing, and official pricing pages of OpenAI, Anthropic, Perplexity, Notion, Figma) — content-hashed, diffed, snapshotted in git.</li>' +
+  '<li><strong>15 public pages tracked daily</strong> by the automated pipeline (Google Workspace/Cloud docs, Google Blog, labs.google, Gemini API pricing, and official pricing pages of OpenAI, Anthropic, Perplexity, Notion, Figma, Mistral, Runway) — content-hashed, diffed, snapshotted in git.</li>' +
   '<li><strong>Vendor-official pricing pages</strong>, figures verified 2026-07-07; third-party or analyst figures always labeled as such.</li>' +
   '<li><strong>Underlying strategy analysis</strong> (validated actions and prioritization; full citations in its Works Cited).</li>' +
   '<li><strong>No figure in this memo is invented, estimated, or extrapolated.</strong></li>' +
@@ -1106,6 +1289,114 @@ fetch('data/data.json', { cache: 'no-store' })
     });
   })
   .catch(function () { /* local open or first deploy — embedded seed data stands */ });
+
+/* ---------- Panel 4: Commercial Sizing & Signals ---------- */
+function fmtInt(n) { return n.toLocaleString('en-US'); }
+function fmtUSD(n) {
+  if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+  return '$' + fmtInt(Math.round(n));
+}
+
+/* --- NotebookLM Enterprise: bottom-up led --- */
+(function renderNblmSizing() {
+  // Seat population — BLS OOH, US 2024, each occupation individually verified by direct fetch (July 2026 pass)
+  var seats = [
+    { occ: 'Market research analysts', n: 941700 },
+    { occ: 'Management analysts',      n: 1075100 },
+    { occ: 'Paralegals & legal assistants', n: 376200 }
+  ];
+  var pop = seats.reduce(function (s, o) { return s + o.n; }, 0); // 2,393,000
+  var priceMo = 9;              // tracker-reported; NOT published by Google (absence re-confirmed 2026-07-12)
+  var priceYr = priceMo * 12;   // $108/seat/yr
+  var attach = [0.01, 0.05, 0.10]; // user-selected scenario parameters
+
+  var rows = attach.map(function (a) {
+    var s = Math.round(pop * a);
+    return '<tr><td><span class="conf scenario">Scenario</span> ' + (a * 100) + '% attach</td>' +
+      '<td class="num">' + fmtInt(s) + ' seats</td>' +
+      '<td class="num">' + fmtUSD(s * priceYr) + ' / yr</td></tr>';
+  }).join('');
+
+  // Top-down (low confidence): category $ (UNVERIFIED) × conversion-rate range (Confirmed)
+  var tdLow = 6.8e9 * 0.198;   // enterprise-search scope × Census all-firms rate
+  var tdHigh = 26e9 * 0.37;    // KM upper scope × Census 250+-employee rate
+
+  document.getElementById('nblm-sizing').innerHTML =
+    '<h4>NotebookLM Enterprise — bottom-up led</h4>' +
+    '<div class="lead-leg">Bottom-up is the strong leg here: seat populations are primary-source-verified. The price input is the weak joint — Google publishes no per-license rate (re-confirmed by direct fetch of the Cloud licensing page, 2026-07-12); the $9 figure is third-party. Formula: <span class="formula" style="display:inline; white-space:normal;">TAM = Seat_population × Attach_rate × Price_per_seat_annual</span></div>' +
+    '<table class="sizing-table"><thead><tr><th>Input</th><th>Value</th><th>Confidence · Source · As-of</th></tr></thead><tbody>' +
+    seats.map(function (o) {
+      return '<tr><td>' + o.occ + '</td><td class="num">' + fmtInt(o.n) + '</td>' +
+        '<td><span class="conf confirmed">Confirmed</span> BLS Occupational Outlook Handbook, US 2024, fetched per-occupation July 2026. US-only, title-literal — a floor.</td></tr>';
+    }).join('') +
+    '<tr><td><strong>Seat population (Σ)</strong></td><td class="num"><strong>' + fmtInt(pop) + '</strong></td><td>Sum of the three occupations above.</td></tr>' +
+    '<tr><td>Price per seat</td><td class="num">$' + priceMo + '/mo · $' + priceYr + '/yr</td>' +
+    '<td><span class="conf tracker">Tracker</span> Third-party reported. Not published by Google — absence re-confirmed on the Cloud licensing page 2026-07-12. Output scales linearly with this input.</td></tr>' +
+    '<tr><td>Attach rate</td><td class="num">1% / 5% / 10%</td>' +
+    '<td><span class="conf scenario">Scenario</span> User-selected assumption. No public source provides product-level attach rates.</td></tr>' +
+    '</tbody></table>' +
+    '<table class="sizing-table"><thead><tr><th>Scenario</th><th>Paid seats</th><th>Annual revenue band</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<div class="lead-leg" style="margin-top:6px;">Context anchor: Gemini Enterprise reported 8M+ paid seats across 2,800+ companies (<span class="conf confirmed">Confirmed</span> Alphabet Q1 2026 earnings call) — the bundled distribution base a NotebookLM Enterprise motion converts from.</div>' +
+    '<div class="diag-note"><strong>Top-down leg (low confidence) and what the gap means:</strong> ' +
+    'Legacy-category × conversion gives ' + fmtUSD(tdLow) + '–' + fmtUSD(tdHigh) + '/yr ' +
+    '(enterprise search ~$6.8B to knowledge-management ~$26B scope <span class="conf unverified">Unverified</span> — carried from earlier research, not independently re-fetched; conversion 19.8%–37% <span class="conf confirmed">Confirmed</span> Census BTOS May 2026). ' +
+    'The ~100× gap versus bottom-up is diagnostic per the triangulation rule: the category boundary includes all enterprise search/KM spend (not just NotebookLM-addressable use cases), and the BLS seat floor excludes global and non-titled users. Neither leg is wrong — the gap tells you which assumptions to tighten before this number drives a decision.</div>';
+})();
+
+/* --- Google Flow: top-down led --- */
+(function renderFlowSizing() {
+  var category = 847e6;   // Fortune Business Insights, 2026 projection, generation-only — confirmed by direct fetch (July 2026)
+  var share = 0.10;       // user-selected scenario parameter
+  var creativeSeats = [
+    { occ: 'Film and video editors', n: 43500 },
+    { occ: 'Producers and directors', n: 167000 },
+    { occ: 'Special effects artists and animators', n: 57100 },
+    { occ: 'Marketing managers', n: 407000 },
+    { occ: 'Advertising & promotions managers', n: 27000 }
+  ];
+  var floorPop = creativeSeats.reduce(function (s, o) { return s + o.n; }, 0); // 701,600
+
+  document.getElementById('flow-sizing').innerHTML =
+    '<h4>Google Flow — top-down led</h4>' +
+    '<div class="lead-leg">Top-down is the strong leg: the category figure is primary-source-verified and already AI-native (no conversion multiplier needed). Formula: <span class="formula" style="display:inline; white-space:normal;">TAM = AI_native_category_$ × addressable_segment_share</span></div>' +
+    '<table class="sizing-table"><thead><tr><th>Input</th><th>Value</th><th>Confidence · Source · As-of</th></tr></thead><tbody>' +
+    '<tr><td>AI video generation category, 2026 (generation-only scope)</td><td class="num">$847M</td>' +
+    '<td><span class="conf confirmed">Confirmed</span> Fortune Business Insights, direct fetch July 2026. Scope matters: generation+editing scoped reports run ~$3.67B <span class="conf unverified">Unverified</span> — a 4× spread on boundary choice alone.</td></tr>' +
+    '<tr><td>Addressable segment share</td><td class="num">10%</td>' +
+    '<td><span class="conf scenario">Scenario</span> User-selected assumption — no source provides a Flow-specific obtainable share.</td></tr>' +
+    '<tr><td><strong>Scenario output</strong></td><td class="num"><strong>' + fmtUSD(category * share) + ' / yr</strong></td>' +
+    '<td>= $847M × 10%. Competitive set for that share: Runway, Pika, OpenAI Sora, Adobe Firefly Video, Luma AI, Kling.</td></tr>' +
+    '</tbody></table>' +
+    '<div class="diag-note"><strong>Why no bottom-up dollar leg is shown:</strong> Flow has no standalone price — it ships inside Google AI Pro ($19.99/mo) and AI Ultra ($99.99 / $199.99) subscriptions (<span class="conf confirmed">Confirmed</span> gemini.google/subscriptions + I/O 2026 blog, verified July 2026), so attributing full subscription revenue to Flow alone would overstate. The computable piece is a seat floor: ' + fmtInt(floorPop) + ' US formal creative/marketing job titles (<span class="conf confirmed">Confirmed</span> BLS 2024: editors 43,500 · producers/directors 167,000 · SFX/animators 57,100 · marketing managers 407,000 · ad managers 27,000) — a severe undercount of Flow’s real prosumer/freelancer market, whose best-known anchor (Adobe Creative Cloud, ~32.5–41M reconstructed subscribers) is itself <span class="conf unverified">Unverified</span>. Stating a bottom-up dollar figure here would require two stacked assumptions; the discipline is to decline.</div>';
+})();
+
+/* --- Internal Signals Schema (deliberately unpopulated) --- */
+(function renderSignals() {
+  function card(title, metrics) {
+    return '<div class="sig-card"><div class="sig-card-header">' + title + '</div><table><tbody>' +
+      metrics.map(function (m) {
+        return '<tr><td class="metric">' + m.name + '<span class="thresh">' + m.thresh + '</span></td>' +
+          '<td>' + m.def + '</td>' +
+          '<td style="white-space:nowrap;"><span class="badge unknown">N/A — internal</span></td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  document.getElementById('sig-cards').innerHTML =
+    card('NotebookLM Enterprise — enterprise motion', [
+      { name: 'Durable vs. experimental ARR', thresh: 'Track the split, not the total', def: 'Contracted/usage-based revenue separated from pilots and trials — the PMF question is how much revenue survives the experiment budget cycle.' },
+      { name: 'Override / correction rate', thresh: 'Falling = rising trust', def: 'How often users correct or discard AI output. The AI-specific quality signal.' },
+      { name: 'Bundled→paid conversion', thresh: 'Among compliance/usage-flagged accounts', def: 'The entitlement-bridge metric: % of flagged Workspace accounts converting to the paid Enterprise SKU.' },
+      { name: 'Time-to-value', thresh: 'Trending down', def: 'Time from license assignment to first indispensable workflow (per use case, not aggregate).' },
+      { name: 'Gross margin', thresh: '> ~60%', def: 'Compute-inclusive margin — the AI-economics floor separating a business from a subsidized demo.' }
+    ]) +
+    card('Google Flow — prosumer motion', [
+      { name: 'Sean Ellis test', thresh: '≥ 40% "very disappointed"', def: '% of surveyed users who would be very disappointed without the product — the classic attitudinal PMF bar.' },
+      { name: 'Day-30 retention, per use case', thresh: 'Flattening above zero', def: 'One indispensable workflow beats broad shallow usage — measure per use case, never in aggregate.' },
+      { name: 'Weekly return rate', thresh: '≥ 40%', def: 'Habit-formation bar for a creation tool.' },
+      { name: 'Cost per interaction', thresh: 'Flat or falling', def: 'Credit-metered generation cost per user session — the unit-economics trend line.' },
+      { name: 'Organic pull', thresh: 'Unsubsidized willingness to pay', def: 'Word-of-mouth share of signups; upgrades at full price rather than promo pricing.' }
+    ]);
+})();
 
 /* ---------- Tabs ---------- */
 var tabBtns = document.querySelectorAll('.tab-btn');
