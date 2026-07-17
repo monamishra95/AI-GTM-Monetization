@@ -1,47 +1,47 @@
 {
-  "lastRun": "2026-07-16T07:52:06Z",
+  "lastRun": "2026-07-17T07:49:35Z",
   "assets": [
     {
       "id": "ultra-access",
       "url": "https://knowledge.workspace.google.com/admin/generative-ai/workspace-with-gemini/ai-ultra-access",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "4ea20191dd0d57ed43f200dfea47e9eb7741c3144a9d26f40e36d54becb05b0a",
-      "detectedLastUpdated": "2026-07-13",
-      "changedSinceLastRun": false,
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "361a5e3ef7c4115e4b68cfd7c7fafe20954b35637b45aa8b3198eefaa84f90da",
+      "detectedLastUpdated": "2026-07-16",
+      "changedSinceLastRun": true,
       "fetchError": null
     },
     {
       "id": "nblm-licensing",
       "url": "https://docs.cloud.google.com/gemini/enterprise/notebooklm-enterprise/docs/set-up-licensing",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "ade4ea620b8020d7ba0f69e8e8403aed19c3dc04dc6b35fc82815526dc293592",
-      "detectedLastUpdated": "2026-07-10",
-      "changedSinceLastRun": false,
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "618c0976f48fd1cf85c67dbe0e1443c6e9b2cdf2a5aa463bb6e913946cbe546d",
+      "detectedLastUpdated": "2026-07-16",
+      "changedSinceLastRun": true,
       "fetchError": null
     },
     {
       "id": "nblm-gemini",
       "url": "https://docs.cloud.google.com/gemini/enterprise/docs/access-notebooklm",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "3ab1a11d39ab2ee152496714aed37ebb794d0fa4e5039e86aa6b103ca5f74cda",
-      "detectedLastUpdated": "2026-07-10",
-      "changedSinceLastRun": false,
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "23ddc8e2d8bb8fd2a199971d82c71a09e487a4e89a5104fabb3284d303ac1b02",
+      "detectedLastUpdated": "2026-07-16",
+      "changedSinceLastRun": true,
       "fetchError": null
     },
     {
       "id": "ai-addons",
       "url": "https://knowledge.workspace.google.com/admin/getting-started/editions/compare-google-ai-expansion-add-ons",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "dedc858aaaa2651e007bf0482ba6a40d0c89714e0c597c6706ba2eb2320132cd",
-      "detectedLastUpdated": "2026-07-10",
-      "changedSinceLastRun": false,
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "899983e4e04061177d149189e8a994a00f3c3a36f5b4bdd4063f5de1c63aedf6",
+      "detectedLastUpdated": "2026-07-16",
+      "changedSinceLastRun": true,
       "fetchError": null
     },
     {
       "id": "io-blog",
       "url": "https://blog.google/products-and-platforms/products/google-one/google-ai-subscriptions/",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "530d6384cae100887122d47ff90677964f2d213660aac81f029a7d573d00f154",
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "ccf930211bbb3f446de669dce36c98b121b27bc29912ad9ac3f1902b385f467a",
       "detectedLastUpdated": null,
       "changedSinceLastRun": true,
       "fetchError": null
@@ -49,7 +49,7 @@
     {
       "id": "gemini-agent-platform",
       "url": "https://cloud.google.com/products/gemini-enterprise-agent-platform/pricing",
-      "lastChecked": "2026-07-16T07:52:06Z",
+      "lastChecked": "2026-07-17T07:49:35Z",
       "contentHash": "a632b25920c86f3ba4a62fc0e76c971ff580c1692edcff688f61a5a113b4040c",
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -58,7 +58,7 @@
     {
       "id": "gemini-api-pricing",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "lastChecked": "2026-07-16T07:52:06Z",
+      "lastChecked": "2026-07-17T07:49:35Z",
       "contentHash": "720f7d4f2032fc90165865eb5bfb2be8c079e0956547cd5f27e69d2f35aad788",
       "detectedLastUpdated": "2026-07-09",
       "changedSinceLastRun": false,
@@ -67,16 +67,16 @@
     {
       "id": "labs-google",
       "url": "https://labs.google/",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "11805dc24503ad2236c5589964bce6f6f20fb1a1015ea3dfabdc4888e0754c5c",
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "56605deeb01ab09e7b3b70855119ca78f543624ae6b20065db2627ae0c9c1db2",
       "detectedLastUpdated": null,
-      "changedSinceLastRun": false,
+      "changedSinceLastRun": true,
       "fetchError": null
     },
     {
       "id": "openai-pricing",
       "url": "https://openai.com/business/pricing/",
-      "lastChecked": "2026-07-16T07:52:06Z",
+      "lastChecked": "2026-07-17T07:49:35Z",
       "contentHash": null,
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -85,8 +85,8 @@
     {
       "id": "anthropic-pricing",
       "url": "https://claude.com/pricing",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "327f7219e0de545e77f8c2a0620ca0fc9914f0a034db1f0b64428586c257f642",
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "88c6da5f8ecde1d7f5f162ad3a29d15526a64f8c976ab5c092824d620dff4652",
       "detectedLastUpdated": null,
       "changedSinceLastRun": true,
       "fetchError": null
@@ -94,7 +94,7 @@
     {
       "id": "perplexity-pricing",
       "url": "https://www.perplexity.ai/enterprise/pricing",
-      "lastChecked": "2026-07-16T07:52:06Z",
+      "lastChecked": "2026-07-17T07:49:35Z",
       "contentHash": null,
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -103,7 +103,7 @@
     {
       "id": "notion-pricing",
       "url": "https://www.notion.com/pricing",
-      "lastChecked": "2026-07-16T07:52:06Z",
+      "lastChecked": "2026-07-17T07:49:35Z",
       "contentHash": "163feadde6dd11975332dc9bebddd94fe1faf42c7b08bc65f062dc967ae4d4c5",
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -112,10 +112,10 @@
     {
       "id": "figma-pricing",
       "url": "https://www.figma.com/pricing/",
-      "lastChecked": "2026-07-16T07:52:06Z",
-      "contentHash": "39a2c24d6acfac4be22a80796960db29322b15c2f975181abc73e903e6733abe",
+      "lastChecked": "2026-07-17T07:49:35Z",
+      "contentHash": "bdbf5f9ba691a79e909e2e7df6a54cd83ca5b6e2902c685b78f85ca1c234bef0",
       "detectedLastUpdated": null,
-      "changedSinceLastRun": false,
+      "changedSinceLastRun": true,
       "fetchError": null
     }
   ]
