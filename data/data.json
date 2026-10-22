@@ -1,55 +1,55 @@
 {
-  "lastRun": "2026-10-21T10:44:33Z",
+  "lastRun": "2026-10-22T10:45:43Z",
   "assets": [
     {
       "id": "ultra-access",
       "url": "https://knowledge.workspace.google.com/admin/generative-ai/workspace-with-gemini/ai-ultra-access",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "71c140f2f282095cf9645efddd36992dfe60cde3460a504220c784b2297fcfad",
       "detectedLastUpdated": "2026-10-20",
-      "changedSinceLastRun": true,
+      "changedSinceLastRun": false,
       "fetchError": null
     },
     {
       "id": "nblm-licensing",
       "url": "https://docs.cloud.google.com/gemini/enterprise/notebooklm-enterprise/docs/set-up-licensing",
-      "lastChecked": "2026-10-21T10:44:33Z",
-      "contentHash": "d9a175283388089326bdcb0eeb48d543caaf5cdf8ec5b15601956511090d6f64",
-      "detectedLastUpdated": "2026-10-14",
-      "changedSinceLastRun": false,
-      "fetchError": null
-    },
-    {
-      "id": "nblm-gemini",
-      "url": "https://docs.cloud.google.com/gemini/enterprise/docs/access-notebooklm",
-      "lastChecked": "2026-10-21T10:44:33Z",
-      "contentHash": "7495fd794fa1fb937a3e878e84ecc122ecb0dbc120434be4fad485e6b0f35a91",
-      "detectedLastUpdated": "2026-10-14",
-      "changedSinceLastRun": false,
-      "fetchError": null
-    },
-    {
-      "id": "ai-addons",
-      "url": "https://knowledge.workspace.google.com/admin/getting-started/editions/compare-google-ai-expansion-add-ons",
-      "lastChecked": "2026-10-21T10:44:33Z",
-      "contentHash": "e732f3d73bb4c127e6d698fc6bbdc02590a4fa56f7c86f727308453ccfe25fbb",
+      "lastChecked": "2026-10-22T10:45:43Z",
+      "contentHash": "eca731cd02d2ead49f353ed1287f4b4649f3415e23f3281fed38e6fcb92f68cb",
       "detectedLastUpdated": "2026-10-20",
       "changedSinceLastRun": true,
       "fetchError": null
     },
     {
+      "id": "nblm-gemini",
+      "url": "https://docs.cloud.google.com/gemini/enterprise/docs/access-notebooklm",
+      "lastChecked": "2026-10-22T10:45:43Z",
+      "contentHash": "4df8b0005dd38ddea3f4d104b40eef2b9a18efb9aa55ddf1c64db5c44f8244d9",
+      "detectedLastUpdated": "2026-10-20",
+      "changedSinceLastRun": true,
+      "fetchError": null
+    },
+    {
+      "id": "ai-addons",
+      "url": "https://knowledge.workspace.google.com/admin/getting-started/editions/compare-google-ai-expansion-add-ons",
+      "lastChecked": "2026-10-22T10:45:43Z",
+      "contentHash": "e732f3d73bb4c127e6d698fc6bbdc02590a4fa56f7c86f727308453ccfe25fbb",
+      "detectedLastUpdated": "2026-10-20",
+      "changedSinceLastRun": false,
+      "fetchError": null
+    },
+    {
       "id": "io-blog",
       "url": "https://blog.google/products-and-platforms/products/google-one/google-ai-subscriptions/",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "9bb60030c1c36d01c250fd70e1b560e26fae7d12aaa9940ffcb58bff30633b5d",
       "detectedLastUpdated": null,
-      "changedSinceLastRun": true,
+      "changedSinceLastRun": false,
       "fetchError": null
     },
     {
       "id": "gemini-agent-platform",
       "url": "https://cloud.google.com/products/gemini-enterprise-agent-platform/pricing",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "68a1cfd507704a690ad3018be013919019fb845f4f930592d38c3ea0b33e0ae7",
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -58,7 +58,7 @@
     {
       "id": "gemini-api-pricing",
       "url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "9207445afdb58dd781511cead1abe413e6434d70e0d4acf90802e22882f1365f",
       "detectedLastUpdated": "2026-10-19",
       "changedSinceLastRun": false,
@@ -67,16 +67,16 @@
     {
       "id": "labs-google",
       "url": "https://labs.google/",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "c3c03e10577599f3293fabbffd0382af9be0f7deed880095d7d425afd670d882",
       "detectedLastUpdated": null,
-      "changedSinceLastRun": true,
+      "changedSinceLastRun": false,
       "fetchError": null
     },
     {
       "id": "openai-pricing",
       "url": "https://openai.com/business/pricing/",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "2eb39947ae63b4bf316c4ca80ae342312a10289f335ae63022544dc363b50016",
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -85,8 +85,8 @@
     {
       "id": "anthropic-pricing",
       "url": "https://claude.com/pricing",
-      "lastChecked": "2026-10-21T10:44:33Z",
-      "contentHash": "a0742a240a3b070d69db26fbd9b8b83637961bda164db812d15ebb3dc3d90a59",
+      "lastChecked": "2026-10-22T10:45:43Z",
+      "contentHash": "ea7189991ab769517d20e09b936fc49c9f6e50e458720a257a1085602d3f80c8",
       "detectedLastUpdated": null,
       "changedSinceLastRun": true,
       "fetchError": null
@@ -94,7 +94,7 @@
     {
       "id": "perplexity-pricing",
       "url": "https://www.perplexity.ai/enterprise/pricing",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": null,
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -103,7 +103,7 @@
     {
       "id": "notion-pricing",
       "url": "https://www.notion.com/pricing",
-      "lastChecked": "2026-10-21T10:44:33Z",
+      "lastChecked": "2026-10-22T10:45:43Z",
       "contentHash": "4855bc980b2c5e8381ea5bae0df773e84519c7dd8b307a87efcd66f69faf8f75",
       "detectedLastUpdated": null,
       "changedSinceLastRun": false,
@@ -112,8 +112,8 @@
     {
       "id": "figma-pricing",
       "url": "https://www.figma.com/pricing/",
-      "lastChecked": "2026-10-21T10:44:33Z",
-      "contentHash": "d158109722770bc83888006a4b61866d843d52631169f958944cacc9de4e0d06",
+      "lastChecked": "2026-10-22T10:45:43Z",
+      "contentHash": "a82fa4a4582275b3f1da4631b98684fd9a2cc6abde6f66d6a8f95ca750e3b534",
       "detectedLastUpdated": null,
       "changedSinceLastRun": true,
       "fetchError": null
